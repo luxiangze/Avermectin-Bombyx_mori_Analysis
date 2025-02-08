@@ -1,0 +1,7 @@
+sample,fastq_1,fastq_2,condition,replicate,batch
+Ava_rep1,raw/AVa-7-9_R1.fq.gz,raw/AVa-7-9_R2.fq.gz,treated,1,A
+Ava_rep2,raw/AVa-13-14_R1.fq.gz,raw/AVa-13-14_R2.fq.gz,treated,2,A
+Ava_rep3,raw/AVa-17-18_R1.fq.gz,raw/AVa-17-18_R2.fq.gz,treated,3,A
+DZ_rep1,raw/DZ-4-5_R1.fq.gz,raw/DZ-4-5_R2.fq.gz,control,1,A
+DZ_rep2,raw/DZ-10-11_R1.fq.gz,raw/DZ-10-11_R2.fq.gz,control,2,A
+DZ_rep3,raw/DZ-14-15_R1.fq.gz,raw/DZ-14-15_R2.fq.gz,control,3,A

@@ -1,0 +1,9 @@
+{
+    "input": "samplesheet.csv",
+    "outdir": "results",
+    "fasta": "\/home\/gyk\/reference\/genome\/Bomo_genome_assembly_chr.fa",
+    "gtf": "\/home\/gyk\/reference\/gtf\/Bomo_gene_models_chr.gtf",
+    "aligner": "star_salmon",
+    "save_reference": true,
+    "skip_pseudo_alignment": true
+}

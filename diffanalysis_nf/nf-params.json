@@ -1,0 +1,11 @@
+{
+    "input": "samplesheet.csv",
+    "contrasts": "contrastssheet.csv",
+    "outdir": "results",
+    "matrix": "\/home\/gyk\/project\/lw_rna_nf\/results\/star_salmon\/salmon.merged.gene_counts.tsv",
+    "transcript_length_matrix": "\/home\/gyk\/project\/lw_rna_nf\/results\/star_salmon\/salmon.merged.transcript_lengths.tsv",
+    "features_metadata_cols": "gene_id,gene_name",
+    "features_gtf_feature_type": "mRNA",
+    "deseq2_cores": 10,
+    "gtf": "\/home\/gyk\/reference\/gtf\/Bomo_gene_models_chr.gtf"
+}

@@ -1,0 +1,7 @@
+sample,fastq_1,fastq_2,strandedness
+Ava_rep1,raw/AVa-7-9_R1.fq.gz,raw/AVa-7-9_R2.fq.gz,unstranded
+Ava_rep2,raw/AVa-13-14_R1.fq.gz,raw/AVa-13-14_R2.fq.gz,unstranded
+Ava_rep3,raw/AVa-17-18_R1.fq.gz,raw/AVa-17-18_R2.fq.gz,unstranded
+DZ_rep1,raw/DZ-4-5_R1.fq.gz,raw/DZ-4-5_R2.fq.gz,unstranded
+DZ_rep2,raw/DZ-10-11_R1.fq.gz,raw/DZ-10-11_R2.fq.gz,unstranded
+DZ_rep3,raw/DZ-14-15_R1.fq.gz,raw/DZ-14-15_R2.fq.gz,unstranded

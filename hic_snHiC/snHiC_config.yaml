@@ -1,0 +1,109 @@
+# This .yaml cofinguration file contains all variables used by the snakemake pipeline
+# DO NOT CHANGE parameter names without changing it in Snakefile as well
+# On the other hand, some parameter values have to be inevitably modifed
+# **********************************************************************************************************************************
+
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ESSENTIAL PARAMETERS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+### 0. General parameters  =========================================================================================================
+# 0.1. Project path and samples info
+runs_directory: "/home/gyk/project/lw_hic_snHiC/00_fastQ"
+output_directory: "/home/gyk/project/lw_hic_snHiC/"
+
+# 0.2 Input file extensions
+fastq_extension: ".fq.gz"
+runs_suffix: ["_R1", "_R2"]
+
+# 0.3 Global options and filters
+character_subsitution_dashes_and_points_sample_name: ""
+chr_filtering_string: "hap|gl|random|NC|hs|Y|M|mt"
+
+# 0.4 Genome
+genome_fasta: "/home/gyk/project/lw_hic_snHiC/Bomo_genome/Bomo.fa"
+genome_assembly_name: "Bomo"
+
+# 0.5 Interaction matrix resolution
+matrix_resolution: [1]  # in kb, they must be multiples of the smallest, at least >1kb
+generate_bam: False # generating bam files will largely increase the computing time
+
+# 0.6 Experimental design
+restriction_enzyme: "MboI"
+
+# 0.7 Experimental design
+TAD_caller: "HiCexplorer" # or "GENOVA"
+
+
+#*** [OPTIONAL ANALYSES] ***
+# 0.8 Group analyses
+groups:
+  perform_grouped_analyses: true
+  sample_metadata: "/home/gyk/project/lw_hic_snHiC/samples_table.txt"
+
+# 0.9 Loop detection (10kb resolution suggested)
+loops:
+  detect_loops: true
+  loop_caller: "HiCexplorer" # or "mustache"
+  max_resolution_loops: 20 #kb
+
+# 0.10 Compartments detection
+compartments:
+  detect_compartments: false
+  minimal_resolution_compartments: 5
+  dcHiC_analyses_type: "cis"
+
+# 0.11 Perform differential analyses
+perform_differential_contacts_analyses: true
+perform_stripes_analyses: False
+
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+### 1. Alignment and BAM generation parameters  ------------------------------------------------------------------------------------
+mapQ_cutoff: 15
+
+
+### 2. HiC explorer build matrix parameters  ---------------------------------------------------------------------------------------
+min_distance: 300
+max_distance: 1000  # == maxLibraryInsertSize
+
+
+### 3. Parameters for the samples'correlation matrices  ----------------------------------------------------------------------------
+heatmap_color: 'RdBu'  # https://matplotlib.org/2.0.2/examples/color/colormaps_reference.html
+correlation_method: 'pearson'  # Possible choices: pearson, spearman
+
+
+### 4. HiC explorer normalization parameters (hicNormalize tool)  ------------------------------------------------------------------
+normalization_method: "smallest"  # Possible choices: norm_range, smallest, multiplicative
+
+
+### 5. Matrices correction (hicCorrectMatrix parameters)  --------------------------------------------------------------------------
+correction_method: "ICE"
+
+
+### 6. TADs calling (hicFindTADs parameters)  --------------------------------------------------------------------------------------
+extra_findTAD_parameters: '--thresholdComparisons 0.01'
+
+
+### 7. Loop detection (HiCExplorer / Mustache)
+hicDetectLoops_params:
+  maxLoopDistance: 2000000 #bp
+  loop_windowSize: 1000 #bp
+  loop_peakWidth: 600 #bp
+  loop_pValuePreselection: 0.05
+  loop_pValue: 0.05
+
+mustache_params:
+  pThreshold: 0.1
+  extra_params: ''
+
+
+### 8. Differential contacts parameters (SELFISH)
+selfish_params:
+  qValue_threshold: 0.05
+  extra_params: ''
+
+
+### 9. Call stripes (stripenn)
+stripenn_params:
+  max_stripes_resolution: 20
+  pValue_threshold: 0.1
+  extra_params: ''

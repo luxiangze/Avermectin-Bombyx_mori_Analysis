@@ -1,0 +1,12 @@
+{
+    "input": "samplesheet.csv",
+    "read_length": 200,
+    "outdir": "results",
+    "fasta": "\/home\/gyk\/reference\/genome\/Bomo_genome_assembly_chr.fa",
+    "gtf": "\/home\/gyk\/reference\/gtf\/Bomo_gene_models_chr.gtf",
+    "macs_gsize": 460000000,
+    "save_reference": true,
+    "narrow_peak": true,
+    "macs_fdr": 0.05000000000000000277555756156289135105907917022705078125,
+    "skip_picard_metrics": true
+}
