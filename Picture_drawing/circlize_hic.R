@@ -1,9 +1,9 @@
-# 设置工作目录
+# Set working directory
 setwd("/home/gyk/project/lw")
 
 start_time <- Sys.time()
 
-# 导入circlize、ggplot2、grid和ggplotify包
+# Import circlize, ggplot2, grid, and ggplotify packages
 library(circlize)
 library(ggplot2)
 library(grid)
@@ -52,36 +52,36 @@ p1 <- ggplot() +
 # p1
 
 
-# 创建染色体信息
+# Create chromosome information
 chrom_df <- read.table("/home/gyk/reference/genome/Bomo_genome_assembly.chrom.bed", sep = "\t", colClasses = c("character", "numeric", "numeric"))
 colnames(chrom_df) <- c("chr", "start", "end")
 
-# 初始化环形图参数
+# Initialize circular plot parameters
 print("Initializing circos plot")
 
 circos.par(
   "track.height" = 0.05,
-  "start.degree" = 90, # 调整起始角度为90度
+  "start.degree" = 90, # Set start angle to 90 degrees
   "gap.degree" = 2
-) # 设置染色体间间隔为2度
+) # Set chromosome spacing to 2 degrees
 
-# 创建环形图基础层
+# Create base layer for circular plot
 circos.initializeWithIdeogram(chrom_df,
   plotType = c("axis", "labels")
 )
 
 print("Adding gene density tracks")
 
-# 读取并处理基因密度数据
+# Read and process gene density data
 gene_density <- read.table("/home/gyk/reference/genome/Bomo_gene_density_100kb.bed", header = TRUE)
 
-# 绘制基因密度轨道
+# Plot gene density track
 circos.genomicTrack(
   gene_density,
   track.height = 0.1,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, 1), # 明确设置y轴范围
+  ylim = c(0, 1), # Explicitly set y-axis range
   panel.fun = function(region, value, ...) {
     circos.genomicLines(region, value,
       type = "h",
@@ -91,9 +91,9 @@ circos.genomicTrack(
   }
 )
 
-print("Adding tad tracks")
+print("Adding TAD tracks")
 
-# 添加TAD数据
+# Add TAD data
 tad_bed <- read.table("/home/gyk/project/lw_hic_snHiC/07_TADs_calling_HiCexplorer/DZ/100kb_resolution/DZ_mapQ15_100kb_boundaries.bed", header = FALSE, sep = "\t")
 tad_bed  <- tad_bed[, c("V1", "V2", "V3")]
 
@@ -115,17 +115,17 @@ circos.genomicTrack(tad_bed,
 
 print("Adding loop link tracks")
 
-# 添加loop数据
+# Add loop data
 loop <- read.table("/home/gyk/project/lw_hic_snHiC/09_Loop_detection_HiCexplorer/DZ/DZ_mapQ15_20kb_loops.bedpe", header = FALSE, sep = "\t")
 colnames(loop) <- c("chr1", "start1", "end1", "chr2", "start2", "end2", "pvalue")
 loops1 <- loop[, c("chr1", "start1", "end1", "pvalue")]
 colnames(loops1) <- c("chr", "start", "end", "pvalue")
 loops2 <- loop[, c("chr2", "start2", "end2", "pvalue")]
 colnames(loops2) <- c("chr", "start", "end", "pvalue")
-# 合并两个数据框
+# Merge two data frames
 loops <- rbind(loops1, loops2)
 
-# 统计loop pvalue数据的值
+# Calculate loop p-value data
 loops$pvalue <- -log10(loops$pvalue)
 summary(loops$pvalue)
 p_max <- max(loops$pvalue)
@@ -134,7 +134,7 @@ circos.genomicTrack(loops,
   track.height = 0.1,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, p_max), # 使用实际的数据范围
+  ylim = c(0, p_max), # Use actual data range
   panel.fun = function(region, value, ...) {
     circos.genomicLines(region, value,
       type = "h",
@@ -146,17 +146,17 @@ circos.genomicTrack(loops,
 
 print("Adding compartment tracks")
 
-# 添加基因组compartment数据
+# Add genome compartment data
 compartment <- read.table("/home/gyk/project/lw_hic_snHiC/10_Compartments_detection_dcHiC/20kb_resolution/DifferentialResult/all_vs_all/viz/files_compartment_beds/intra_DZ_mapQ15_20kb_PC_compartments_sorted.bed", skip = 1, header = FALSE)
 compartment <- compartment[, c("V1", "V2", "V3", "V4", "V5")]
 colnames(compartment) <- c("chr", "start", "end", "compartment", "score")
 
-# 绘制compartment轨道,A区室绘制成浅红色,B区绘制成浅蓝色
+# Plot compartment track, A compartment in light red, B compartment in light blue
 circos.genomicTrack(compartment,
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, 1), # 明确设置y轴范围
+  ylim = c(0, 1), # Explicitly set y-axis range
   panel.fun = function(region, value, ...) {
     circos.genomicRect(region, value,
       ytop = 1,
@@ -174,7 +174,7 @@ pushViewport(vp)
 grid.draw(p2)
 upViewport()
 
-# 清除环形图设置
+# Clear circular plot settings
 circos.clear()
 dev.off()
 

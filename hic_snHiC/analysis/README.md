@@ -15,7 +15,7 @@ Rscript analysis/enrichx.R -i analysis/loops_gene
 id.list -o analysis/results/enrichment_results -d org.Bmori.eg.db
 ```
 
-## diff loops analysis
+## Differential Loops Analysis
 
 ```bash
 awk 'FNR==NR {key=$1 FS $2 FS $3 FS $4 FS $5 FS $6; seen[key]++; next} {key=$1 FS $2 FS $3 FS $4 FS $5 FS $6; if (seen[key] != 1) print}' 09_Loop_detection_HiCexplorer/Ava/Ava_mapQ15_10kb_loops.bedpe 09_Loop_detection_HiCexplorer/DZ/DZ_mapQ15_10kb_loops.bedpe > 09_Loop_detection_HiCexplorer/DZ_Ava_10kb_loops.bedpe
@@ -33,7 +33,7 @@ grep -Ff analysis/diff_loops_geneid.list analysis/Bmo_annotations.tsv | awk -F '
 
 ```
 
-## plot diff loops
+## Plot Differential Loops
 
 ```bash
 mamba activate hicexplorer
@@ -54,7 +54,7 @@ hicPlotMatrix -m 06_Interaction_matrices_normalized_and_corrected/corrected_matr
 ```
 
 ```bash
-# diff contacts gene analysis
+# Differential Contacts Gene Analysis
 awk 'NR > 1 && $8 > 0' 12_Grouped_analyses/G_Differential_contacts_analyses_SELFISH/Ava_vs_DZ/Ava_vs_DZ_10kb_SELFISH.txt > analysis/selfish_filtered_result.txt
 
 cat analysis/selfish_filtered_result.txt | awk '{print $1"\t"$2"\t"$3}' > analysis/diff_contacts_gene.bed
@@ -75,18 +75,18 @@ grep -Ff analysis/diff_contacts_geneid.list analysis/Bmo_annotations.tsv | awk -
 
 ```
 
-## 查找loops变化及表达量变化较大的基因
+## Find Genes with Significant Changes in Loops and Expression Levels
 
 ```bash
-# 提取前六列并排序
+# Extract the first six columns and sort them
 awk '{print $1, $2, $3, $4, $5, $6}' 09_Loop_detection_HiCexplorer/Ava/Ava_mapQ15_10kb_loops.bedpe | sort > analysis/ava_loops.txt
 awk '{print $1, $2, $3, $4, $5, $6}' 09_Loop_detection_HiCexplorer/DZ/DZ_mapQ15_10kb_loops.bedpe | sort > analysis/dz_loops.txt
 
-# 使用comm比较文件
-# 仅在file1中
+# Compare files using comm
+# Only in file1
 comm -23 analysis/ava_loops.txt analysis/dz_loops.txt > analysis/only_in_ava.txt
 
-# 仅在file2中
+# Only in file2
 comm -13 analysis/ava_loops.txt analysis/dz_loops.txt > analysis/only_in_dz.txt
 
 # only in ava genes
@@ -109,6 +109,6 @@ bedtools intersect -a analysis/only_in_dz_loops_gene.bed \
 
 grep -Ff analysis/only_in_ava_loops_geneid_up.list analysis/Bmo_annotations.tsv | awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4}' > analysis/only_in_ava_loops_geneid_up_annotation.tsv
 
-# 制作差异link的文件
+# Create a file for differential links
 awk 'NR > 1 && $8 > 0 {print "chr"$1"\t"$2"\t"$3"\tchr"$4"\t"$5"\t"$6"\t"$8}' 12_Grouped_analyses/G_Differential_contacts_analyses_SELFISH/Ava_vs_DZ/Ava_vs_DZ_10kb_SELFISH.txt > analysis/Ava_link.tsv
 awk 'NR > 1 && $8 < 0 {print "chr"$1"\t"$2"\t"$3"\tchr"$4"\t"$5"\t"$6"\t"($8 < 0 ? -$8 : $8)}' 12_Grouped_analyses/G_Differential_contacts_analyses_SELFISH/Ava_vs_DZ/Ava_vs_DZ_10kb_SELFISH.txt > analysis/DZ_link.tsv

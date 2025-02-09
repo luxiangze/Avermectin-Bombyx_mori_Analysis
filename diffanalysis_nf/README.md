@@ -1,18 +1,18 @@
 # nf-core/differentialabundance
 
-## 运行流程
+## Workflow
 
 ```bash
-# 本地运，如果能够访问github，可以直接运行：
+# Local execution: If you can access GitHub, you can directly run:
 nextflow run nf-core/differentialabundance -r 1.5.0 -name lw_DGE_nf -profile singularity -resume -params-file nf-params.json
-# 如果无法访问github，可以下载到本地运行。
-# 首先在能够访问github的机器上下载nf-core/differentialabundance：
+# If you cannot access GitHub, you can download and run it locally.
+# First, download nf-core/differentialabundance on a machine that can access GitHub:
 nf-core pipelines download differentialabundance -x tar.gz -s singularity
-# 按照提示，设置好singularity缓存目录，例如：～/sifs。
-# 然后等待下载完成，最后会得到一个tar.gz文件。
-# 把这个文件上传到运行pipeline的机器上，同样需要设置好singularity缓存目录。
-# 并且把下载pipeline时下载好的sigularity镜像缓存同样上传到运行pipeline的机器上的singularity缓存目录。
-# 然后在运行pipeline的机器上的工作目录运行：
+# Follow the prompts to set up the Singularity cache directory, e.g., ~/sifs.
+# Then wait for the download to complete, and you will get a tar.gz file.
+# Upload this file to the machine running the pipeline, and also set up the Singularity cache directory.
+# Also upload the Singularity image cache downloaded during the pipeline download to the Singularity cache directory on the machine running the pipeline.
+# Then, in the working directory on the machine running the pipeline, run:
 nextflow run nf-core-differentialabundance_1.5.0/1_5_0 -name lw_rnaseq_dge -profile docker -resume -params-file nf-params.json
 ```
 

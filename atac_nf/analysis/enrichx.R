@@ -27,7 +27,7 @@ if (is.null(opt$input)) {
 # Get input file prefix for output files
 file_prefix <- tools::file_path_sans_ext(basename(opt$input))
 
-# R包安装
+# R package installation
 # if(!require(BiocManager)){
 # 	install.packages("BiocManager");
 # }
@@ -62,19 +62,19 @@ dir.create(opt$outdir, showWarnings = FALSE, recursive = TRUE)
 # Read input gene list
 gene_list <- readLines(opt$input)
 
-# GO富集分析
+# GO enrichment analysis
 go_enrich_result <- enrichGO(gene = gene_list, 
     keyType = "GID", 
     ont = "ALL",               # Sub Ontology
-    OrgDb = get(opt$database), # 物种数据库
-    pAdjustMethod = "fdr",     # p值的校正方法
-    pvalueCutoff = 1,       # p值的阈值
-    qvalueCutoff = 1)       # q值的阈值
+    OrgDb = get(opt$database), # Organism database
+    pAdjustMethod = "fdr",     # p-value adjustment method
+    pvalueCutoff = 1,       # p-value cutoff
+    qvalueCutoff = 1)       # q-value cutoff
 
-# 将GO富集结果(数据框)转换为表格
+# Convert GO enrichment results (data frame) to a table
 go_table <- as.data.frame(go_enrich_result)
 
-# 计算富集因子
+# Calculate enrichment factor
 split_col4 <- strsplit(go_table$GeneRatio, "/")
 split_col5 <- strsplit(go_table$BgRatio, "/")
 number_col4 <- sapply(split_col4, function(x) as.numeric(x))
@@ -82,26 +82,26 @@ number_col5 <- sapply(split_col5, function(x) as.numeric(x))
 Enrich_factor <- number_col4[1, ] * number_col5[2, ] / number_col4[2, ] / number_col5[1, ]
 GO_table <- cbind(go_table[, 1:5], Enrich_factor=Enrich_factor, go_table[, 6:ncol(go_table)])
 
-# 输出GO分析结果
+# Output GO analysis results
 write.table(GO_table, 
             file=file.path(opt$outdir, paste0(file_prefix, "_go_enrichment.xls")), 
             sep="\t", quote=FALSE, row.names=FALSE)
 
-# GO柱状图
+# GO bar plot
 pdf(file=file.path(opt$outdir, paste0(file_prefix, "_go_barplot.pdf")), width=13, height=10) 
 barplot(go_enrich_result, showCategory=5, split="ONTOLOGY", col="p.adjust", 
         label_format=35, title="GO Enrichment Barplot", font.size=15) +
        facet_grid(ONTOLOGY~., scale='free')
 dev.off()
 
-# GO气泡图
+# GO bubble plot
 pdf(file=file.path(opt$outdir, paste0(file_prefix, "_go_bubble.pdf")), width=13, height=10) 
 dotplot(go_enrich_result, showCategory=5, split="ONTOLOGY", col="p.adjust", 
         label_format=35, title="GO Enrichment Bubble", font.size=15) +
         facet_grid(ONTOLOGY~., scale='free')
 dev.off()
 
-# GO富集因子图
+# GO enrichment factor plot
 BP <- subset(GO_table, ONTOLOGY=="BP")[1:5, ]
 CC <- subset(GO_table, ONTOLOGY=="CC")[1:5, ]
 MF <- subset(GO_table, ONTOLOGY=="MF")[1:5, ]
@@ -124,7 +124,7 @@ ggplot(topgo, aes(Enrich_factor, Description)) +
         facet_grid(ONTOLOGY~., scale='free')
 dev.off()
 
-# KEGG富集分析
+# KEGG enrichment analysis
 input_data <- read.table(opt$input, header = FALSE, stringsAsFactors = FALSE)
 all_enretz_ids <- read.table("analysis/entrez.txt", header = TRUE, sep = "\t")
 entrez_ids <- all_enretz_ids %>% filter(all_enretz_ids$GENE %in% input_data$V1) %>% select(ENTREZ.ID)
@@ -133,12 +133,12 @@ entrez_ids <- as.character(entrez_ids$ENTREZ.ID)
 kegg_enrich_result <- enrichKEGG(
     gene = entrez_ids,
     keyType = "kegg",
-    organism = "bmor",  # 物种
-    pAdjustMethod = "fdr",  # p值校正方法
+    organism = "bmor",  # Species
+    pAdjustMethod = "fdr",  # p-value adjustment method
     pvalueCutoff = 1,
     qvalueCutoff = 1)
     
-# 将KEGG富集结果转换为表格
+# Convert KEGG enrichment results to a table
 kegg_table <- as.data.frame(kegg_enrich_result)
 split_col4 <- strsplit(kegg_table$GeneRatio, "/")
 split_col5 <- strsplit(kegg_table$BgRatio, "/")
@@ -147,26 +147,26 @@ number_col5 <- sapply(split_col5, function(x) as.numeric(x))
 Enrich_factor <- number_col4[1, ] * number_col5[2, ] / number_col4[2, ] / number_col5[1, ]
 KEGG_table <- cbind(kegg_table[, 1:5], Enrich_factor=Enrich_factor, kegg_table[, 6:ncol(kegg_table)])
 
-# 输出KEGG分析结果
+# Output KEGG analysis results
 write.table(KEGG_table, 
             file=file.path(opt$outdir, paste0(file_prefix, "_kegg_enrichment.xls")), 
             sep="\t", quote=FALSE, row.names=FALSE)
 
-# KEGG柱状图
+# KEGG bar plot
 pdf(file=file.path(opt$outdir, paste0(file_prefix, "_kegg_barplot.pdf")), width=13, height=10)
 barplot(kegg_enrich_result, showCategory=15, title="KEGG Enrichment Barplot", 
         col="p.adjust", label_format=35, font.size=15)
 dev.off()
 
-# KEGG气泡图
+# KEGG bubble plot
 pdf(file=file.path(opt$outdir, paste0(file_prefix, "_kegg_bubble.pdf")), width=13, height=10)
 dotplot(kegg_enrich_result, showCategory=15, title="KEGG Enrichment Bubble", 
         col="p.adjust", label_format=35, font.size=15)
 dev.off()
 
-# KEGG富集因子图
+# KEGG enrichment factor plot
 topkegg <- head(KEGG_table, 15)
-# 删除description中" - ""后面全部的内容
+# Remove all content after " - " in the description
 topkegg <- topkegg %>% mutate(Description = gsub(" - .*", "", Description))
 pdf(file=file.path(opt$outdir, paste0(file_prefix, "_kegg_enrichfactor.pdf")), width=13, height=10)
 ggplot(topkegg, aes(Enrich_factor, Description)) + 

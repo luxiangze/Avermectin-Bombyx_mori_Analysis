@@ -1,10 +1,10 @@
 ## make tracks file
 
 ```bash
-# 激活pyGenomeTracks环境
+# Activate the pyGenomeTracks environment
 mamba activate pgt
 
-# 生成tracks文件
+# Generate tracks file
 make_tracks_file \
 --trackFiles \
 "/home/gyk/project/lw_hic_snHiC/06_Interaction_matrices_normalized_and_corrected/corrected_matrices/Ava/h5_format/Ava_mapQ15_20kb_normalized_corrected.h5" \
@@ -22,7 +22,7 @@ make_tracks_file \
 ## plot tracks
 
 ```bash
-# 生成tracks文件
+# Generate tracks file
 pyGenomeTracks --tracks tracks.ini --region chr12:6167018-6382366 -o KWMTBOMO07140_image.pdf --dpi 300
 
 for i in `cat gene.list`
@@ -46,7 +46,7 @@ hicPlotMatrix -m /home/gyk/project/lw_hic_snHiC/06_Interaction_matrices_normaliz
 grep -Ff gene.list /home/gyk/project/lw_hic_snHiC/analysis/Bmo_annotations.tsv | awk -F '\t' '{print $1"\t"$2"\t"$3"\t"$4}' > gene.list.annotation.tsv
 ```
 
-## 批量生成track
+## Batch generation track
 
 ```bash
 for i in `cat gene.list`
@@ -59,8 +59,8 @@ do
     pyGenomeTracks --tracks tracks.ini --region $region -o hic/${i}_tracks.pdf --dpi 300
 done
 
-## links 
-## 第八列大于零则写入到link_increase.txt，小于零则写入到link_decrease.txt
+# links 
+# If the 8 column is greater than 0, it is written to link_increase.txt, if it is less than 0, it is written to link_decrease.txt
 awk '{if($8>0){print "chr"$1"\t"$2"\t"$3"\tchr"$4"\t"$5"\t"$6"\t"$7"\t"$8}}' /home/gyk/project/lw_hic_snHiC/12_Grouped_analyses/G_Differential_contacts_analyses_SELFISH/Ava_vs_DZ/Ava_vs_DZ_1kb_SELFISH.txt > link_increase.txt
 awk '{if($8<=0){print "chr"$1"\t"$2"\t"$3"\tchr"$4"\t"$5"\t"$6"\t"$7"\t"$8}}' /home/gyk/project/lw_hic_snHiC/12_Grouped_analyses/G_Differential_contacts_analyses_SELFISH/Ava_vs_DZ/Ava_vs_DZ_1kb_SELFISH.txt > link_decrease.txt
 

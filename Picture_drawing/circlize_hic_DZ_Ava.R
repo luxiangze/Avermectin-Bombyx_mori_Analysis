@@ -61,9 +61,9 @@ print("Initializing circos plot")
 
 circos.par(
   "track.height" = 0.05,
-  "start.degree" = 90, # 调整起始角度为90度
+  "start.degree" = 90, # Set start angle to 90 degrees
   "gap.degree" = 2
-) # 设置染色体间间隔为2度
+) # Set chromosome spacing to 2 degrees
 
 # 创建环形图基础层
 circos.initializeWithIdeogram(chrom_df,
@@ -81,7 +81,7 @@ circos.genomicTrack(
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, 1), # 明确设置y轴范围
+  ylim = c(0, 1), # Explicitly set y-axis range
   panel.fun = function(region, value, ...) {
     circos.genomicLines(region, value,
       type = "h",
@@ -156,7 +156,7 @@ circos.genomicTrack(DZ_loops,
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, p_max), # 使用实际的数据范围
+  ylim = c(0, p_max), # Use actual data range
   panel.fun = function(region, value, ...) {
     circos.genomicLines(region, value,
       type = "h",
@@ -187,7 +187,7 @@ circos.genomicTrack(Ava_loops,
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, p_max), # 使用实际的数据范围
+  ylim = c(0, p_max), # Use actual data range
   panel.fun = function(region, value, ...) {
     circos.genomicLines(region, value,
       type = "h",
@@ -209,7 +209,7 @@ circos.genomicTrack(DZ_compartment,
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, 1), # 明确设置y轴范围
+  ylim = c(0, 1), # Explicitly set y-axis range
   panel.fun = function(region, value, ...) {
     circos.genomicRect(region, value,
       ytop = 1,
@@ -232,7 +232,7 @@ circos.genomicTrack(Ava_compartment,
   track.height = 0.05,
   bg.border = NA,
   bg.col = "#FFFFFF",
-  ylim = c(0, 1), # 明确设置y轴范围
+  ylim = c(0, 1), # Explicitly set y-axis range
   panel.fun = function(region, value, ...) {
     circos.genomicRect(region, value,
       ytop = 1,

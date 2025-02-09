@@ -1,17 +1,17 @@
 # nf-core/atacseq
 
-## 运行流程
+## Workflow
 
 ```bash
-# 本地运，如果能够访问github，可以直接运行：
+# Local execution: If you can access GitHub, you can directly run:
 nextflow run nf-core/atacseq -r 2.1.2 -name lw_atac_nf -profile singularity -resume -params-file nf-params.json
-# 如果无法访问github，可以下载到本地运行。
-# 首先在能够访问github的机器上下载nf-core/atacseq：
+# If you cannot access GitHub, you can download and run it locally.
+# First, download nf-core/atacseq on a machine that can access GitHub:
 nf-core pipelines download atacseq -x tar.gz -s singularity
-# 按照提示，设置好singularity缓存目录，例如：～/sifs。
-# 然后等待下载完成，最后会得到一个tar.gz文件。
-# 把这个文件上传到运行pipeline的机器上，同样需要设置好singularity缓存目录。
-# 并且把下载pipeline时下载好的sigularity镜像缓存同样上传到运行pipeline的机器上的singularity缓存目录。
-# 然后在运行pipeline的机器上的工作目录运行：
+# Follow the prompts to set up the Singularity cache directory, e.g., ~/sifs.
+# Then wait for the download to complete, and you will get a tar.gz file.
+# Upload this file to the machine running the pipeline, and also set up the Singularity cache directory.
+# Also upload the Singularity image cache downloaded during the pipeline download to the Singularity cache directory on the machine running the pipeline.
+# Then, in the working directory on the machine running the pipeline, run:
 nextflow run nf-core-atacseq_2.1.2/2_1_2/  -name lw_atac_nf -profile singularity -resume -params-file nf-params.json
 ```

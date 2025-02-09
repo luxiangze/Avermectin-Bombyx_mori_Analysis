@@ -1,4 +1,3 @@
-
 #BiocManager::install("ChIPseeker")
 library("ChIPseeker")
 
@@ -21,21 +20,21 @@ output_dir  <- "analysis/results/peaks_annotation/"
 flag_chrs   <- "no"
 
 
-# 使用makeTxDbFromGFF函数解析GFF或GTF文件制作TxDb
+# Use the makeTxDbFromGFF function to parse GFF or GTF files and create a TxDb
 txdb       <- makeTxDbFromGFF(file = file_annot, format = file_format)
 
-# 使用readPeakFile函数读取peaks文件，生成一个对象
+# Use the readPeakFile function to read peaks files and generate an object
 data_peaks <- readPeakFile(file_peaks)
 
-# getPromoters获取启动子上下游3kb的位置
+# getPromoters retrieves the positions 3kb upstream and downstream of promoters
 promoter   <- getPromoters(TxDb = txdb, upstream=3000, downstream=3000)
 
-# getTagMatrix peaks结果转换成矩阵 窗口为启动子
+# getTagMatrix converts peaks results into a matrix with the window set to promoters
 tagMatrix  <- getTagMatrix(data_peaks, windows = promoter)
 peaksAnno  <- annotatePeak(data_peaks, TxDb=txdb, tssRegion=c(-3000, 3000), 
                            verbose=FALSE, addFlankGeneInfo=TRUE, flankDistance=5000)
 
-# 转为表格
+# Convert to a table
 annot_tab <- as.data.frame(peaksAnno)
 colnames(annot_tab)[1] <- "#seqnames"
 
@@ -43,35 +42,35 @@ write.table(x = annot_tab, file = paste0(output_dir, "/", sample_name, ".peaks.g
             quote = FALSE, sep = "\t", row.names = FALSE)
 #cat(paste0(paste(unique(annot_tab$geneId),collapse="\n"),"\n"), file=paste0(output_dir, "/", sample_name, ".peaks.gene_annotation.list"))
 
-# 绘图 
-# 可视化peak文件 横坐标:染色体位点; 纵坐标:每条染色体上的peaks位点及得分
+# Plot
+# Visualize peak files: X-axis: chromosome positions; Y-axis: peaks positions and scores on each chromosome
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.chromosome_distribution.pdf"))
 covplot(data_peaks, weightCol = 'V5', xlab = "Chromosome Size (bp)", 
         title = paste0(sample_name, " Peaks over Chromosomes"))
 dev.off()
 
-# tagHeatmap 函数查看TSS(转录起始位点)上下游3kb区域peak的分布情况（热图）
+# tagHeatmap function views the distribution of peaks in the 3kb region upstream and downstream of TSS (transcription start site) (heatmap)
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.around_tss_heatmap.pdf"))
 tagHeatmap(tagMatrix, xlab="Genomic Region (5'->3')", title = paste0(sample_name," peak distribution arround TSS"))
 dev.off()
 
-# plotAvgProf 函数绘制一个峰图描述所有分布的平均情况
+# plotAvgProf function plots a profile describing the average distribution
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.around_tss_profile.pdf"), 6, 4)
 plotAvgProf(tagMatrix, xlim=c(-3000, 3000), xlab="Genomic Region (5'->3')", 
             ylab = "Peak Count Frequency", title = paste0(sample_name," peak distribution arround TSS"))
 dev.off()
 
-# plotDistToTSS 函数计算出距离最近的基因的TSS上游和下游结合位点的百分比,并可视化其分布
+# plotDistToTSS function calculates the percentage of binding sites upstream and downstream of the nearest gene's TSS and visualizes their distribution
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.around_tss_bar.pdf"), 7, 3)
 plotDistToTSS(peaksAnno,title="Distribution of transcription factor-binding loci \n relative to TSS")
 dev.off()
 
-# plotAnnoBar 函数可视化peaks组成比例:柱状图
+# plotAnnoBar function visualizes the composition of peaks: bar plot
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.feature_distribution_bar.pdf"), 7, 3)
 plotAnnoBar(x = peaksAnno, ylab = "Percentage(%)", title = paste0(sample_name, " Feature Distribution"))
 dev.off()
 
-# plotAnnoPie 函数可视化peaks组成比例:饼图
+# plotAnnoPie function visualizes the composition of peaks: pie chart
 pdf(file = paste0(output_dir, "/", sample_name, ".peaks.feature_distribution_pie.pdf"), 6, 4)
 plotAnnoPie(x = peaksAnno, pie3D = FALSE)
 dev.off()

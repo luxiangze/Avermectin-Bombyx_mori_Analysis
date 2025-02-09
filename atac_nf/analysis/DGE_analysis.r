@@ -1,12 +1,12 @@
 # BiocManager::install("DESeq2") if necessary
 
-# 把工作目录设置为数据所在的目录
+# Set the working directory to the directory containing the data
 setwd("/home/gyk/project/lw_diffanalysis_nf/")
 
 DEG <- read.table("results/tables/differential/condition_control_treated.deseq2.results.tsv", header = TRUE)
 DEG <- na.omit(DEG)
 
-# 火山图
+# Volcano plot
 logFC_cutoff <- with(DEG, mean(abs(log2FoldChange)) + 2 * sd(abs(log2FoldChange)))
 # logFC_cutoff  <- 1.5
 DEG$change <- as.factor(ifelse(DEG$padj < 0.05 & abs(DEG$log2FoldChange) > logFC_cutoff,
@@ -14,8 +14,8 @@ DEG$change <- as.factor(ifelse(DEG$padj < 0.05 & abs(DEG$log2FoldChange) > logFC
 )
 write.csv(DEG, "analysis/results/DEG_deseq2.results.csv")
 this_tile <- paste0("Cutoff for logFc is ", round(logFC_cutoff, 3),
-  "\nThe number of up gene is ", nrow(DEG[DEG$change == "UP", ]),
-  "\nThe number of down gene is ", nrow(DEG[DEG$change == "DOWN", ])
+  "\nThe number of up-regulated genes is ", nrow(DEG[DEG$change == "UP", ]),
+  "\nThe number of down-regulated genes is ", nrow(DEG[DEG$change == "DOWN", ])
 )
 
 library(ggplot2)
@@ -28,8 +28,8 @@ g <- ggplot(data = DEG,
   ggtitle(this_tile) + theme(plot.title = element_text(size = 15, hjust = 0.5)) +
   scale_colour_manual(values = c("blue", "black", "red")) +
   # corresponding to the levels(res$change)
-  geom_hline(yintercept = -log10(0.05), lty = 4) + #定义p值和线形
-  geom_vline(xintercept = c(-logFC_cutoff, logFC_cutoff), lty = 4) #定义差异倍数和线形
+  geom_hline(yintercept = -log10(0.05), lty = 4) + # Define p-value and line type
+  geom_vline(xintercept = c(-logFC_cutoff, logFC_cutoff), lty = 4) # Define fold change and line type
 print(g)
 ggsave(g, filename = "analysis/results/volcano.pdf", device = "pdf", dpi = 720, width = 6, height = 7)
 
@@ -57,8 +57,8 @@ rownames(choose_matrix_annotation) <- choose_gene
 # replace NA to -
 choose_matrix_annotation[is.na(choose_matrix_annotation)] <- "-"
 
-# 对choose_matrix矩阵进行对数转换
-log_choose_matrix <- log2(choose_matrix + 1)  # 加1是为了避免对0值进行对数运算
+# Log-transform the choose_matrix matrix
+log_choose_matrix <- log2(choose_matrix + 1)  # Adding 1 avoids taking the logarithm of zero
 
 # plot heatmap for top 50 genes on padj
 pheatmap(
